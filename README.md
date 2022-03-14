@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @joonseonhwang
-- 👀 I’m interested in surfing
-- 🌱 I’m currently learning UDP communication for robotics
-- 💞️ I’m looking to collaborate on Robotics company
+- 👀 I’m interested in research for human
+- 🌱 I’m currently learning interesting system!
+- 💞️ I’m looking to collaborate on people who activley dicussion with me!!
 -
 
 <!---
