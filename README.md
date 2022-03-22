@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @joonseonhwang
 - 👀 I’m interested in research for human
-- 🌱 I’m currently learning interesting system!
+- 🌱 I’m currently working on MRI haptic system!
 - 💞️ I’m looking to collaborate on people who activley dicussion with me!!
 -
 
