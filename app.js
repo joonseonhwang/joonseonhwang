@@ -2,7 +2,7 @@
    모든 데이터는 이 기기의 IndexedDB에만 저장된다. 서버 전송 없음. */
 'use strict';
 
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const DB_NAME = 'peoplebook';
 const DB_VER = 1;
 const REL_TYPES = ['배우자', '약혼', '연인', '전 연인', '가족', '친구', '동료', '지인', '소개해줌', '갈등', '기타'];
@@ -311,7 +311,7 @@ function upcomingItems(withinDays) {
 }
 function vHome() {
   const n = S.people.length;
-  if (!n) return `<div class="top"><h1>People Book</h1></div>
+  if (!n) return `<div class="top"><h1>People Book</h1></div>${installBanner()}
     <div class="empty"><p style="font-size:40px;margin-bottom:6px">📒</p><p>아직 등록된 사람이 없어요.<br>백업 파일(JSON)이 있으면 불러오세요.</p>
     <div style="display:flex;flex-direction:column;gap:8px"><button class="btn pri block" data-act="restore">백업 파일 불러오기</button>
     <a class="btn block" href="#/p/new">직접 추가하기</a></div></div>
@@ -325,6 +325,7 @@ function vHome() {
   const backupBanner = lb === null || lb >= 14
     ? `<div class="banner warn"><div class="tx">${lb === null ? '아직 백업한 적이 없어요.' : `마지막 백업이 ${lb}일 전이에요.`} 폰을 바꾸거나 앱 데이터를 지우면 사라지니 백업해 두세요.</div><button class="btn sm warn" data-act="backup">백업</button></div>` : '';
   return `<div class="top"><h1>People Book</h1><a class="iconbtn" href="#/p/new" aria-label="사람 추가">${PLUS}</a></div>
+    ${installBanner()}
     <div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="이름, 회사, 학교, 관계 검색" autocomplete="off" enterkeyhint="search">
       <button class="clear" data-act="clearQ" aria-label="지우기"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
@@ -581,10 +582,17 @@ async function mergePeople(aId, bId, choice) {
 
 /* ───────────── 화면: 설정 ───────────── */
 let installPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (location.hash.startsWith('#/settings')) route(); });
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; route(); });
+window.addEventListener('appinstalled', () => { installPrompt = null; toast('설치됐어요! 홈 화면 아이콘으로 열어주세요'); route(); });
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+function installBanner() {
+  if (isStandalone()) return '';
+  if (installPrompt) return `<div class="banner"><div class="tx">📲 홈 화면에 앱으로 설치하면 오프라인에서도 바로 열려요</div><button class="btn sm pri" data-act="install">설치</button></div>`;
+  return `<div class="banner"><div class="tx">📲 <b>앱으로 설치하기</b><br>Claude·카톡 등에서 링크를 눌러 열었다면 메뉴(⋮)에서 <b>'Chrome에서 열기'</b>를 먼저 누르세요. 그다음 Chrome 메뉴(⋮) → <b>'홈 화면에 추가'</b> → <b>'설치'</b>.</div></div>`;
+}
 function vSettings() {
   const lb = S.meta.lastBackup ? new Date(S.meta.lastBackup) : null;
-  const standalone = matchMedia('(display-mode: standalone)').matches;
+  const standalone = isStandalone();
   return `<div class="top"><h1>설정</h1></div>
     <div class="sec" style="margin-top:4px"><h3>데이터</h3></div>
     <div class="setgrp">
@@ -866,7 +874,7 @@ window.addEventListener('popstate', () => { if (!$('#modal').hidden) closeSheet(
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     navigator.serviceWorker.register('sw.js').catch(() => { });
   }
-  if (navigator.storage?.persist && matchMedia('(display-mode: standalone)').matches) navigator.storage.persist().catch(() => { });
+  if (navigator.storage?.persist && isStandalone()) navigator.storage.persist().catch(() => { });
 })();
 
 /* 테스트/디버그용 노출 (네트워크 사용 없음) */

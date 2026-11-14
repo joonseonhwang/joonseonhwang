@@ -1,5 +1,5 @@
 /* People Book 서비스워커 — 앱 화면 파일만 캐시. 인물 데이터는 IndexedDB에만 있음 */
-const CACHE = 'peoplebook-v1.0.0';
+const CACHE = 'peoplebook-v1.0.1';
 const ASSETS = ['./', './index.html', './app.js', './styles.css', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png'];
 
