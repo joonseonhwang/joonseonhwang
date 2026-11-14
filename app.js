@@ -2,7 +2,7 @@
    모든 데이터는 이 기기의 IndexedDB에만 저장된다. 서버 전송 없음. */
 'use strict';
 
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.0.2';
 const DB_NAME = 'peoplebook';
 const DB_VER = 1;
 const REL_TYPES = ['배우자', '약혼', '연인', '전 연인', '가족', '친구', '동료', '지인', '소개해줌', '갈등', '기타'];

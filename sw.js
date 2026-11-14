@@ -1,5 +1,5 @@
 /* People Book 서비스워커 — 앱 화면 파일만 캐시. 인물 데이터는 IndexedDB에만 있음 */
-const CACHE = 'peoplebook-v1.0.1';
+const CACHE = 'peoplebook-v1.0.2';
 const ASSETS = ['./', './index.html', './app.js', './styles.css', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/maskable-512.png'];
 
@@ -13,6 +13,9 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  // 하위 폴더에 있는 다른 앱(예: baekdo-weight/)은 건드리지 않음
+  const rest = new URL(req.url).pathname.slice(new URL(self.registration.scope).pathname.length);
+  if (rest.includes('/') && !rest.startsWith('icons/')) return;
   if (req.mode === 'navigate') {
     // 화면: 네트워크 우선(업데이트 반영), 실패하면 캐시 → 오프라인 동작
     e.respondWith(fetch(req).then(res => {
